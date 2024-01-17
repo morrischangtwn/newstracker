@@ -1,6 +1,6 @@
 streamlit
+setuptools==57.5.0
 pygooglenews
-setuptools
 feedparser
 numpy
 pandas
