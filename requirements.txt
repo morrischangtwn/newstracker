@@ -1,4 +1,6 @@
 streamlit
+feedparser>=6.0.8
+setuptools==57.5.0
 numpy
 pandas
 plotly
