@@ -12,7 +12,6 @@ import nltk
 from nltk.tokenize import word_tokenize
 from datetime import datetime, timedelta
 
-pip install -r requirements.txt
 
 st.set_page_config(
     page_title="Taiwan News Tracker",
