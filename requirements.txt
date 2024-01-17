@@ -1,6 +1,7 @@
 streamlit
-setuptools<58.0.0
+
 pygooglenews
+setuptools<58.0.0
 feedparser>=6.0.8 --install-option="--no-deps"
 numpy
 pandas
