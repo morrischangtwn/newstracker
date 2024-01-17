@@ -12,6 +12,8 @@ import nltk
 from nltk.tokenize import word_tokenize
 from datetime import datetime, timedelta
 
+!pip install -r requirements.txt
+
 st.set_page_config(
     page_title="Taiwan News Tracker",
     page_icon="random",
@@ -40,7 +42,7 @@ def tokenize_and_remove_useless(title):
 
 st.title('International News Coverage on Taiwan Tracker')
 
-input_df = pd.read_csv('results.csv')
+# input_df = pd.read_csv('results.csv')
 
 
 # days_option = st.sidebar.slider('Days Included until current time？',1, 100)
