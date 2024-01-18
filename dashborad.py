@@ -39,7 +39,7 @@ def tokenize_and_remove_useless(title):
     tokens = word_tokenize(title)
     
     # Remove stop words and short tokens
-    filtered_tokens = [token.lower() for token in tokens if token.lower() not in stop_words and len(token) > 2 and token.lower() != user_input_text]
+    filtered_tokens = [token.lower() for token in tokens if token.lower() not in stop_words and len(token) > 2 and token.lower() != user_input_text.lower()]
     return filtered_tokens
 
 
@@ -59,6 +59,9 @@ date_list = pd.date_range(start=start_date, end=end_date, freq='D').date.tolist(
 
 user_input_text = st.sidebar.text_input("Enter keyword:",value='Taiwan',max_chars=15,)
 
+def remove_items(row):
+    return [token for token in row['title_token'] if token != row['media'].lower()]
+
 @st.cache_data()
 def get_news_in_time(date_list, user_input_text):
     result_df = pd.DataFrame()
@@ -68,8 +71,11 @@ def get_news_in_time(date_list, user_input_text):
         googlenews.get_news(user_input_text)
         temp_df = pd.DataFrame((googlenews.results()))
         result_df = pd.concat([result_df,temp_df])
+    result_df['title'] = result_df['title'].str.replace(r'More', ' ')
     result_df['title_token'] = result_df['title'].apply(tokenize_and_remove_useless)
     result_df['datetime'] = pd.to_datetime(result_df['datetime'])
+    result_df['title_token'] = result_df.apply(remove_items, axis=1)
+
     return result_df.reset_index()
 querry_df = get_news_in_time(date_list,user_input_text)   
 
@@ -146,12 +152,14 @@ import matplotlib.pyplot as plt
 
 # Create a string from the list of tokens
 text = ' '.join(all_words)
-
+font = r'TaipeiSansTCBeta-Regular.ttf'
 # Generate the word cloud
-wordcloud = WordCloud(width=800, height=400, background_color='black',include_numbers = True).generate(text)
+wordcloud = WordCloud(width=800, height=400, background_color='black',include_numbers = True, font_path=font, margin=0).generate(text)
 
 fig = plt.figure(figsize=(10, 5))
 # Plot the WordCloud image
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis('off')
 st.pyplot(fig)
+
+st.dataframe(querry_df)
