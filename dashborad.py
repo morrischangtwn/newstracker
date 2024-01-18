@@ -5,13 +5,14 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from pygooglenews import GoogleNews
+# from pygooglenews import GoogleNews
 import json
 import time
 import nltk
 from nltk.tokenize import word_tokenize
 from datetime import datetime, timedelta
-
+from GoogleNews import GoogleNews
+googlenews = GoogleNews()
 
 st.set_page_config(
     page_title="Taiwan News Tracker",
@@ -60,14 +61,12 @@ def get_news_in_time(date_list, user_input_text):
     result_df = pd.DataFrame()
     for i in range(len(date_list)-1):
         print('day', date_list[i])
-        search = gn.search(user_input_text, from_ = date_list[i], to_ = date_list[i+1])
-        entries = search["entries"]
-        temp_df = pd.DataFrame(entries)
+        googlenews = GoogleNews(start=date_list[i],end= date_list[i+1])
+        googlenews.get_news(user_input_text)
+        temp_df = pd.DataFrame((googlenews.results()))
         result_df = pd.concat([result_df,temp_df])
-    result_df['source_link'] = result_df['source'].apply(lambda x: x['href'])
-    result_df['source_name'] = result_df['source'].apply(lambda x: x['title'])
     result_df['title_token'] = result_df['title'].apply(tokenize_and_remove_useless)
-    result_df['published'] = pd.to_datetime(result_df['published'])
+    result_df['datetime'] = pd.to_datetime(result_df['datetime'])
     return result_df.reset_index()
 querry_df = get_news_in_time(date_list,user_input_text)   
 
@@ -101,8 +100,8 @@ querry_df = get_news_in_time(date_list,user_input_text)
 #     return test_df
 
 # querry_df = get_news_from_google(days_option)
-outlet_count = pd.DataFrame(querry_df['source_name'].value_counts()).reset_index()
-date_count = pd.DataFrame(querry_df['published'].dt.date.value_counts()).reset_index()
+outlet_count = pd.DataFrame(querry_df['media'].value_counts()).reset_index()
+date_count = pd.DataFrame(querry_df['datetime'].dt.date.value_counts()).reset_index()
 # st.dataframe(querry_df)
 # st.dataframe(date_count)
 num_article = querry_df.shape[0]
@@ -110,8 +109,8 @@ st.write(f'Number of Articles: {num_article}')
 st.write(f'Due to Google News Query Limit, Only 100 Articles from Each Day is included')
 # Page Row 1 
 col1, col2 = st.columns(2, gap="small")
-fig_outlet = px.pie(outlet_count, values='count', names='source_name', title='News Source Proprotion')
-fig_date = px.bar(date_count, y='count', x='published', title='Number of Articles per Day')
+fig_outlet = px.pie(outlet_count, values='count', names='media', title='News Source Proprotion')
+fig_date = px.bar(date_count, y='count', x='datetime', title='Number of Articles per Day')
 # Display the pie chart using Streamlit
 with col1:
     st.plotly_chart(fig_outlet)
