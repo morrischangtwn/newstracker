@@ -39,7 +39,7 @@ def tokenize_and_remove_useless(title):
     tokens = word_tokenize(title)
     
     # Remove stop words and short tokens
-    filtered_tokens = [token.lower() for token in tokens if token.lower() not in stop_words and len(token) > 2 and token.lower() != 'taiwan']
+    filtered_tokens = [token.lower() for token in tokens if token.lower() not in stop_words and len(token) > 2 and token.lower() != user_input_text]
     return filtered_tokens
 
 
