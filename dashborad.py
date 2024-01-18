@@ -25,6 +25,9 @@ def tokenize_title(title):
     tokens = word_tokenize(title)
     return tokens
 
+nltk.download('punkt')
+nltk.download('stopwords')
+
 
 print('-------')
 from nltk.corpus import stopwords
@@ -70,8 +73,6 @@ def get_news_in_time(date_list, user_input_text):
     return result_df.reset_index()
 querry_df = get_news_in_time(date_list,user_input_text)   
 
-nltk.download('punkt')
-nltk.download('stopwords')
 
 
 
