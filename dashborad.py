@@ -70,8 +70,8 @@ def get_news_in_time(date_list, user_input_text):
     return result_df.reset_index()
 querry_df = get_news_in_time(date_list,user_input_text)   
 
-# nltk.download('punkt')
-
+nltk.download('punkt')
+nltk.download('stopwords')
 
 
 
