@@ -80,7 +80,9 @@ def get_news_in_time(date_list, user_input_text):
         print('Error c')
         googlenews.get_news(user_input_text)
         print('Error D')
+
         temp_df = pd.DataFrame((googlenews.results()))
+        print('temp_shape:', temp_df.shape)
         print('Error E')
         result_df = pd.concat([result_df,temp_df])
         print('Error F')
