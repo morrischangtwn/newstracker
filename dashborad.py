@@ -72,8 +72,8 @@ def get_news_in_time(date_list, user_input_text):
         print('day', date_list[i])
         print('Error B')
         print(date_list[i], date_list[i+1])
-        strt_dt = date_list[i].strftime("%m/%d/%y")
-        end_dt = date_list[i+1].strftime("%m/%d/%y")
+        strt_dt = date_list[i].strftime("%m/%d/%Y")
+        end_dt = date_list[i+1].strftime("%m/%d/%Y")
     
         googlenews = GoogleNews(start=strt_dt,end= end_dt)
         print(strt_dt, end_dt)
