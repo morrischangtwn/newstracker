@@ -15,7 +15,7 @@ from GoogleNews import GoogleNews
 googlenews = GoogleNews()
 
 st.set_page_config(
-    page_title="Taiwan News Tracker",
+    page_title="News Tracker",
     page_icon="random",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -43,7 +43,7 @@ def tokenize_and_remove_useless(title):
     return filtered_tokens
 
 
-st.title('International News Coverage on Taiwan Tracker')
+st.title('International News Coverage Tracker')
 
 # input_df = pd.read_csv('results.csv')
 
@@ -70,6 +70,7 @@ def get_news_in_time(date_list, user_input_text):
     for i in range(len(date_list)-1):
         print('day', date_list[i])
         print('Error B')
+        print(date_list[i], date_list[i+1])
         googlenews = GoogleNews(start=date_list[i],end= date_list[i+1])
         print('Error c')
         googlenews.get_news(user_input_text)
