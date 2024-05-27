@@ -66,8 +66,10 @@ def remove_items(row):
 def get_news_in_time(date_list, user_input_text):
     result_df = pd.DataFrame()
     print(type(date_list[0]))
+    print('Error A point')
     for i in range(len(date_list)-1):
         print('day', date_list[i])
+        print('Error B')
         googlenews = GoogleNews(start=date_list[i],end= date_list[i+1])
         googlenews.get_news(user_input_text)
         temp_df = pd.DataFrame((googlenews.results()))
