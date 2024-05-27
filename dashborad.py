@@ -64,7 +64,7 @@ def remove_items(row):
 
 @st.cache_data()
 def get_news_in_time(date_list, user_input_text):
-    googlenews = GoogleNews()googlenews = GoogleNews()
+    googlenews = GoogleNews()
     result_df = pd.DataFrame()
     print(type(date_list[0]))
     print('Error A point')
