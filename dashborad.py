@@ -83,6 +83,7 @@ def get_news_in_time(date_list, user_input_text):
         print('Error E')
         result_df = pd.concat([result_df,temp_df])
         print('Error F')
+    print(result_df)
     result_df['title'] = result_df['title'].str.replace(r'More', ' ')
     print('Error g')
     result_df['title_token'] = result_df['title'].apply(tokenize_and_remove_useless)
