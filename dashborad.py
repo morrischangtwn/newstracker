@@ -78,6 +78,7 @@ def get_news_in_time(date_list, user_input_text):
         googlenews = GoogleNews(start=strt_dt,end= end_dt)
         print(strt_dt, end_dt)
         print('Error c')
+        print(type(user_input_text))
         googlenews.get_news(user_input_text)
         print('Error D')
 
