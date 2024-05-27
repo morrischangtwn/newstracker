@@ -65,6 +65,7 @@ def remove_items(row):
 @st.cache_data()
 def get_news_in_time(date_list, user_input_text):
     googlenews = GoogleNews()
+    googlenews = GoogleNews(lang='en')
     result_df = pd.DataFrame()
     print(type(date_list[0]))
     print('Error A point')
@@ -74,9 +75,9 @@ def get_news_in_time(date_list, user_input_text):
         print(date_list[i], date_list[i+1])
         strt_dt = date_list[i].strftime("%m/%d/%Y")
         end_dt = date_list[i+1].strftime("%m/%d/%Y")
-    
+        
         googlenews = GoogleNews(start=strt_dt,end= end_dt)
-        print(strt_dt, end_dt)
+        print(type(strt_dt), type(end_dt))
         print('Error c')
         print(type(user_input_text))
         googlenews.get_news(user_input_text)
