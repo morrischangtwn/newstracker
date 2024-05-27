@@ -56,7 +56,7 @@ current_date = datetime.now().date()
 start_date = st.sidebar.date_input("Start Date", current_date - timedelta(days=1))  # Set default to a week ago
 end_date = st.sidebar.date_input("End Date", current_date)
 date_list = pd.date_range(start=start_date, end=end_date, freq='D').date.tolist()
-
+print(date_list)
 user_input_text = st.sidebar.text_input("Enter keyword:",value='Taiwan',max_chars=15,)
 
 def remove_items(row):
