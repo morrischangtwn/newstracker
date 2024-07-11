@@ -1,4 +1,4 @@
-mport time
+import time
 
 import streamlit as st
 
@@ -15,7 +15,7 @@ from GoogleNews import GoogleNews
 googlenews = GoogleNews()
 
 st.set_page_config(
-    page_title="News Tracker",
+    page_title="Taiwan News Tracker",
     page_icon="random",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -43,7 +43,7 @@ def tokenize_and_remove_useless(title):
     return filtered_tokens
 
 
-st.title('International News Coverage Tracker')
+st.title('International News Coverage on Taiwan Tracker')
 
 # input_df = pd.read_csv('results.csv')
 
@@ -56,7 +56,7 @@ current_date = datetime.now().date()
 start_date = st.sidebar.date_input("Start Date", current_date - timedelta(days=1))  # Set default to a week ago
 end_date = st.sidebar.date_input("End Date", current_date)
 date_list = pd.date_range(start=start_date, end=end_date, freq='D').date.tolist()
-print(type(start_date))
+
 user_input_text = st.sidebar.text_input("Enter keyword:",value='Taiwan',max_chars=15,)
 
 def remove_items(row):
@@ -64,33 +64,14 @@ def remove_items(row):
 
 @st.cache_data()
 def get_news_in_time(date_list, user_input_text):
-    googlenews = GoogleNews()
-    # googlenews = GoogleNews(lang='en')
     result_df = pd.DataFrame()
-    print(type(date_list[0]))
-    print('Error A point')
     for i in range(len(date_list)-1):
         print('day', date_list[i])
-        print('Error B')
-        print(date_list[i], date_list[i+1])
-        strt_dt = date_list[i].strftime("%m/%d/%Y")
-        end_dt = date_list[i+1].strftime("%m/%d/%Y")
-        
-        googlenews = GoogleNews(start=strt_dt,end= end_dt)
-        print(type(strt_dt), type(end_dt))
-        print('Error c')
-        print(type(user_input_text))
+        googlenews = GoogleNews(start=date_list[i],end= date_list[i+1])
         googlenews.get_news(user_input_text)
-        print('Error D')
-
         temp_df = pd.DataFrame((googlenews.results()))
-        print('temp_shape:', temp_df.shape)
-        print('Error E')
         result_df = pd.concat([result_df,temp_df])
-        print('Error F')
-    print(result_df)
     result_df['title'] = result_df['title'].str.replace(r'More', ' ')
-    print('Error g')
     result_df['title_token'] = result_df['title'].apply(tokenize_and_remove_useless)
     result_df['datetime'] = pd.to_datetime(result_df['datetime'])
     result_df['title_token'] = result_df.apply(remove_items, axis=1)
@@ -134,15 +115,10 @@ num_article = querry_df.shape[0]
 st.write(f'Number of Articles: {num_article}')
 st.write(f'Due to Google News Query Limit, Only 100 Articles from Each Day is included')
 # Page Row 1 
-col1, col2 = st.columns(2, gap="small")
+
 fig_outlet = px.pie(outlet_count, values='count', names='media', title='News Source Proprotion')
 fig_date = px.bar(date_count, y='count', x='datetime', title='Number of Articles per Day')
 # Display the pie chart using Streamlit
-with col1:
-    st.plotly_chart(fig_outlet)
-
-with col2:
-    st.plotly_chart(fig_date)
 
 
 # Page Row 2 
@@ -179,6 +155,57 @@ fig = plt.figure(figsize=(10, 5))
 # Plot the WordCloud image
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis('off')
-st.pyplot(fig)
+
+
+
+# Overall Sentiment
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+# Download VADER lexicon
+nltk.download('vader_lexicon')
+
+# Initialize VADER sentiment analyzer
+sia = SentimentIntensityAnalyzer()
+def analyze_sentiment_vader(text):
+    scores = sia.polarity_scores(text)
+    return scores['compound'], scores['pos'], scores['neu'], scores['neg']
+querry_df[['compound', 'positive', 'neutral', 'negative']] = querry_df['title'].apply(lambda x: pd.Series(analyze_sentiment_vader(x)))
+def label_sentiment(input):
+    if input < 0:
+        return 'negative'
+    elif input == 0.0:
+        return 'netural'
+    elif input >0:
+        return 'positive'
+    
+querry_df['sent_label'] = querry_df['compound'].apply(label_sentiment)
+
+fig_sent_date = px.histogram(querry_df, x='datetime', y='compound', template='plotly', title='Sentiment (Compound) Change Overtime',      labels={
+        'datetime': 'Date', 
+        'compound': 'Compound Sentiment Score'
+    }
+)
+
+fig_sent = px.pie(querry_df, 
+            #  values='sent_label', 
+             names='sent_label',
+            #  title='Sentiment Analysis Distribution',)
+             color_discrete_sequence=['#00CC96','#636EFA','#EE553B'])
+col1, col2, col3 = st.columns(3, gap="small")
+with col1:
+    st.plotly_chart(fig_outlet)
+
+with col2:
+    st.plotly_chart(fig_date)
+
+with col3:
+    st.plotly_chart(fig_sent)
+
+col1_2, col2_2 = st.columns(2, gap="small")
+
+with col1_2:
+    st.pyplot(fig)
+with col2_2:
+    st.plotly_chart(fig_sent_date)
+
 
 st.dataframe(querry_df)
