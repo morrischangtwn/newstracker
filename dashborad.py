@@ -79,34 +79,6 @@ def get_news_in_time(date_list, user_input_text):
     return result_df.reset_index()
 querry_df = get_news_in_time(date_list,user_input_text)   
 
-
-
-
-# @st.cache_data()
-# def get_news_from_google(days_option):
-#     days_option_text = f'{days_option}d'
-#     search = gn.search('Taiwan', when = days_option_text)
-#     entries = search["entries"]
-#     test_df = pd.DataFrame(entries)
-#     test_df['source_link'] = test_df['source'].apply(lambda x: x['href'])
-#     test_df['source_name'] = test_df['source'].apply(lambda x: x['title'])
-#     test_df['title_token'] = test_df['title'].apply(tokenize_title)
-#     test_df['published'] = pd.to_datetime(test_df['published'])
-#     return test_df
-
-# @st.cache_data()
-# def get_news_from_google_range(day):
-#     days_option_text = f'{days_option}d'
-#     search = gn.search('Taiwan', when = days_option_text)
-#     entries = search["entries"]
-#     test_df = pd.DataFrame(entries)
-#     test_df['source_link'] = test_df['source'].apply(lambda x: x['href'])
-#     test_df['source_name'] = test_df['source'].apply(lambda x: x['title'])
-#     test_df['title_token'] = test_df['title'].apply(tokenize_title)
-#     test_df['published'] = pd.to_datetime(test_df['published'])
-#     return test_df
-
-# querry_df = get_news_from_google(days_option)
 outlet_count = pd.DataFrame(querry_df['media'].value_counts()).reset_index()
 date_count = pd.DataFrame(querry_df['datetime'].dt.date.value_counts()).reset_index()
 # st.dataframe(querry_df)
@@ -153,7 +125,7 @@ wordcloud = WordCloud(width=800, height=400, background_color='black',include_nu
 
 fig = plt.figure(figsize=(10, 5))
 # Plot the WordCloud image
-plt.imshow(wordcloud, interpolation='bilinear')
+plt.imshow(wordcloud, interpolation='bilinear') 
 plt.axis('off')
 
 
