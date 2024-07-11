@@ -64,7 +64,7 @@ user_input_text = st.sidebar.text_input("Enter keyword:",value='Chips', max_char
 def remove_items(row):
     return [token for token in row['title_token'] if token != row['media'].lower()]
 
-# @st.cache_data()
+@st.cache_data()
 def get_news_in_time(date_list, user_input_text):
     result_df = pd.DataFrame()
     for i in range(len(date_list)-1):
@@ -74,6 +74,7 @@ def get_news_in_time(date_list, user_input_text):
         googlenews.get_news(user_input_text)
         temp_df = pd.DataFrame((googlenews.results()))
         result_df = pd.concat([result_df,temp_df])
+    print(result_df.shape, 'shapeeeeeeee')
     result_df['title'] = result_df['title'].str.replace(r'More', ' ')
     result_df['title_token'] = result_df['title'].apply(tokenize_and_remove_useless)
     result_df['datetime'] = pd.to_datetime(result_df['datetime'])
