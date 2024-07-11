@@ -57,14 +57,14 @@ start_date = st.sidebar.date_input("Start Date", current_date - timedelta(days=1
 end_date = st.sidebar.date_input("End Date", current_date)
 date_list = pd.date_range(start=start_date, end=end_date, freq='D').date.tolist()
 
-# date_list = [date.strftime('%Y-%m-%d') for date in date_list]
+date_list = [date.strftime('%Y-%m-%d') for date in date_list]
 
-user_input_text = st.sidebar.text_input("Enter keyword:",value='Taiwan',max_chars=15,)
+user_input_text = st.sidebar.text_input("Enter keyword:",value='Chips', max_chars=15,)
 
 def remove_items(row):
     return [token for token in row['title_token'] if token != row['media'].lower()]
 
-@st.cache_data()
+# @st.cache_data()
 def get_news_in_time(date_list, user_input_text):
     result_df = pd.DataFrame()
     for i in range(len(date_list)-1):
