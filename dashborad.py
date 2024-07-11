@@ -57,7 +57,7 @@ start_date = st.sidebar.date_input("Start Date", current_date - timedelta(days=1
 end_date = st.sidebar.date_input("End Date", current_date)
 date_list = pd.date_range(start=start_date, end=end_date, freq='D').date.tolist()
 
-date_list = [date.strftime('%Y-%m-%d') for date in date_list]
+# date_list = [date.strftime('%Y-%m-%d') for date in date_list]
 
 user_input_text = st.sidebar.text_input("Enter keyword:",value='Taiwan',max_chars=15,)
 
